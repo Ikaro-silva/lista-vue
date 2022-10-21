@@ -1,10 +1,15 @@
 <template>
-    <div class="bg-gray-300 rounded-sm">
+    <div class="bg-gray-300 rounded-sm" >
                     <div class="flex items-center px-4 py-3 border-b 
                                 border-gray-400 last:border-b-0">
                         <div class="flex items-center justify-center 
                                     mr-2">
-                            <button class="text-gray-400">
+                            <button 
+                                :class="{
+                                    'text-green-700':isCompleted,
+                                    'text-gray-400':!isCompleted
+                                }"
+                                @click="onCheckclick(todo.id)">
                                 <svg class="w-5 h-5" fill="none" 
                                         stroke="currentColor" viewBox="0 0 24 24" 
                                         xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" 
@@ -13,19 +18,24 @@
                         </div>
 
                         <div class="w-full">
+
                             <input
+                                
                                 type="text"
                                 placeholder="Digite a sua tarefa"
-                                value="Estudar Vue 3"
+                                
+                                :value="todo.title"
+                                
                                 class="bg-gray-300 placeholder-gray-500 
                                         text-gray-700 font-light focus:outline-none block w-full appearance-none 
                                         leading-normal mr-3"
+                                @keyup.enter="updadeTodo($event, todo.id)"
                             >
                         </div>
 
                         <div class="ml-auto flex items-center 
                                     justify-center">
-                            <button class="focus:outline-none">
+                            <button class="focus:outline-none" @click="deletee(todo.id)">
                                 <svg
                                     class="ml-3 h-4 w-4 text-gray-500"
                                     viewBox="0 0 24 24"
@@ -48,3 +58,63 @@
                     </div>
                 </div>
 </template>
+<script>
+    export default{
+        name:'TodoIten',
+        props:{
+            todo:{
+                type:Object,
+                default:()=>{},
+            }
+        },
+        data(){
+            return{
+                isCompleted:this.todo.completed,
+                title:null
+            }
+        },
+        methods:{
+            async deletee(id){
+                const req =await fetch(`http://localhost:3000/todos/${id}`,{
+                method:"DELETE"
+                
+                })
+                const res=await req.json()
+                console.log(this.$store.state)
+            },
+
+            async updadeTodo(event,id){
+                
+                
+                const option = event.target.value
+                if(!event.target.value){
+                    return false
+                }
+                const dataJson=JSON.stringify({title:option})
+                const req=await fetch(`http://localhost:3000/todos/${id}`,{
+                    method:"PATCH",
+                    headers:{"Content-Type":"application/json"},
+                    body:dataJson
+                })
+                const res = await req.json()
+                console.log('eusei')
+            },
+
+            async onCheckclick(id){
+                this.isCompleted=!this.isCompleted
+                
+                const dataJson=JSON.stringify({completed:this.isCompleted})
+                const req=await fetch(`http://localhost:3000/todos/${id}`,{
+                    method:"PATCH",
+                    headers:{"Content-Type":"application/json"},
+                    body:dataJson
+                })
+                const res = await req.json()
+                console.log(this.$store.state)
+            }
+               
+        },
+            
+    }
+ 
+</script>

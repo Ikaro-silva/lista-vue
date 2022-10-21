@@ -1,9 +1,3 @@
-<script setup>
-import TodoSpinner from './components/TodoSpinner.vue'
-import TodoForm from './components/TodoForm.vue'
-import TodoItens from './components/TodoItens.vue'
-import TodoEmpty from './components/TodoEmpty.vue';
-</script>
 
 <template>
   <!-- Content -->
@@ -11,22 +5,62 @@ import TodoEmpty from './components/TodoEmpty.vue';
         <div class="w-full sm:w-1/2 lg:w-1/3 mx-auto">
 
             <!-- Todo spinner -->
-           <TodoSpinner/>
+           <TodoSpinner v-if="loading"/>
             <!--/ Todo spinner -->
 
             <!-- Todo form -->
-            <TodoForm/>
-            <!--/ Todo form -->
-
-            <!-- Todo items -->
-            <TodoItens/>
-            <!--/ Todo items -->
-
-            <!-- Todo empty -->
-            <TodoEmpty/>
-            <!--/ Todo empty -->
+            <template v-else>
+                <TodoForm/>
+                <!--/ Todo form -->
+                <!-- Todo items -->
+                <TodoItens />
+                <!--/ Todo items -->
+                <!-- Todo empty -->
+                <TodoEmpty/>
+                <!--/ Todo empty -->
+            </template>
         </div>
     </div>
     <!--/ Content -->
 </template>
+<script >
+    import TodoSpinner from './components/TodoSpinner.vue'
+    import TodoForm from './components/TodoForm.vue'
+    import TodoItens from './components/TodoItens.vue'
+    import TodoEmpty from './components/TodoEmpty.vue';
+    
+    
+    export default {
+        name:"App",
+        components:{
+            TodoEmpty,
+            TodoForm,
+            TodoItens,
+            TodoSpinner,
+        },    
+        data(){
+            return{
+                loading:false
+            }
+        },
+        methods:{
+            
+           async createLista (){
+             const req = await fetch('http://localhost:3000/todos')
+             const data = await req.json()
+        
+                this.$store.commit('storeTodos',data)
+                this.loading =false
+           },
+
+        },
+        mounted(){
+            this.createLista()
+        }
+        
+    }
+       
+    
+</script>
+
 

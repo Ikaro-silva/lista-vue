@@ -1,20 +1,67 @@
 <template>
     <form class="flex items-center px-4 bg-gray-900 h-15 
-                            rounded-sm border-l-2 border-green-400 mb-3">
+                 rounded-sm border-l-2 border-green-400 mb-3" @submit="adcionar">
                 <input
+                    v-model="title"
                     placeholder="Adicione um novo item ..."
                     type="text"
                     class="bg-gray-900 placeholder-gray-500 text-gray-500 
                     font-light focus:outline-none block w-full appearance-none leading-normal 
                     py-3 pr-3"
+                    
                 >
 
                 <button
                     class="text-green-400 text-xs font-semibold 
                             focus:outline-none"
                     type="submit"
+                    
                 >
                     ADICIONAR
                 </button>
             </form>
 </template>
+<script>
+
+
+    export default{
+        name:"TodoForm",
+        
+        data(){
+            
+            return{
+                title:null
+            }
+        },
+
+        methods:{
+            async adcionar(e){
+                e.preventDefault()
+                const data={
+                    title:this.title,
+                    completed: false
+               }
+               
+               if(!this.title){
+                    return false
+               }
+
+               const dataJson = JSON.stringify(data)
+
+               const req = await fetch ('http://localhost:3000/todos',{
+                method:'POST',
+                headers:{"Content-Type":"application/json"},
+                body:dataJson
+               })
+
+               const res=await req.json()
+               
+               this.$store.commit('updade',res)
+               
+               this.title=""
+               
+            }
+        }
+    }
+     
+</script>

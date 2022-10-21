@@ -1,8 +1,6 @@
 <template>
     <div class="space-y-2">
-        <TodoIten/>
-        <TodoIten/>
-        <TodoIten/>
+        <TodoIten v-for="todo in $store.state.user.todos" :key="todo.id" :todo="todo"/>
     </div>
 </template>
 <script>
