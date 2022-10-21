@@ -13,10 +13,10 @@
                 <TodoForm/>
                 <!--/ Todo form -->
                 <!-- Todo items -->
-                <TodoItens />
+                <TodoItens v-if="$store.state.user.todos.length"/>
                 <!--/ Todo items -->
                 <!-- Todo empty -->
-                <TodoEmpty/>
+                <TodoEmpty v-else/>
                 <!--/ Todo empty -->
             </template>
         </div>
@@ -51,6 +51,7 @@
         
                 this.$store.commit('storeTodos',data)
                 this.loading =false
+                
            },
 
         },

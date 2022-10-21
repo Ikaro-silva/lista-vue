@@ -41,7 +41,7 @@
                     title:this.title,
                     completed: false
                }
-               
+               console.log(this.$store.state)
                if(!this.title){
                     return false
                }

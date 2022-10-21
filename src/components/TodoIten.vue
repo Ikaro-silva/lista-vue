@@ -80,12 +80,12 @@
                 
                 })
                 const res=await req.json()
-                console.log(this.$store.state)
+                this.$store.commit('deleteTodo',id)
             },
 
             async updadeTodo(event,id){
                 
-                
+
                 const option = event.target.value
                 if(!event.target.value){
                     return false
@@ -110,7 +110,7 @@
                     body:dataJson
                 })
                 const res = await req.json()
-                console.log(this.$store.state)
+                
             }
                
         },
